@@ -74,6 +74,7 @@ exports.isAuth = (req, res, next) => {
 
 // admin role is 1 so if role equals 0, not admin
 exports.isAdmin = (req, res, next) => {
+	console.log("isadminisadminisadminisadminisadmin");
 	if(req.profile.role === 0) {
 		return res.status(403).json({
 			error: "Admin resource! Access denied"
