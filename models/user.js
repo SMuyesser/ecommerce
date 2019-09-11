@@ -49,6 +49,12 @@ userSchema.virtual('password') //send password from client side
 
 // how to add methods to our user schema
 userSchema.methods = {
+
+	authenticate: function(plainText) {
+		// return true or false if user can be authenticated
+		return this.encryptPassword(plainText) === this.hashed_password;
+	},
+
 	encryptPassword : function(password) {
 		if(!password) return ''; // if no password then nothing
 		try {
