@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken'); // to generate signed web token
 const expressJwt = require('express-jwt'); // used for authorization check
 const {errorHandler} = require('../helpers/dbErrorHandler');
 
-exports.signup = (req, res) => {
+exports.signUp = (req, res) => {
 	// console.log('req.body', req.body);
 	const user = new User(req.body);
 	user.save((err, user) => {
@@ -20,7 +20,7 @@ exports.signup = (req, res) => {
 	});
 };
 
-exports.signin = (req, res) => {
+exports.signIn = (req, res) => {
 	// find used based on email
 	const {email, password} = req.body;
 	User.findOne({email}, (err, user) => {
@@ -47,7 +47,7 @@ exports.signin = (req, res) => {
 };
 
 // remove cookie from response
-exports.signout = (req, res) => {
+exports.signOut = (req, res) => {
 	res.clearCookie('t');
 	res.json({message: 'Signout success'});
 };
