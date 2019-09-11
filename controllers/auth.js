@@ -59,3 +59,25 @@ exports.requireSignIn = expressJwt({
 	secret: process.env.JWT_SECRET,
 	userProperty: "auth"
 });
+
+// if we have user that is true with the comparison
+// if not true return status unauthorized
+exports.isAuth = (req, res, next) => {
+	let user = req.profile && req.auth && req.profile._id == req.auth._id;
+	if (!user) {
+		return res.status(403).json({
+			error: "Access denied"
+		});
+	}
+	next();
+};
+
+// admin role is 1 so if role equals 0, not admin
+exports.isAdmin = (req, res, next) => {
+	if(req.profile.role === 0) {
+		return res.status(403).json({
+			error: "Admin resource! Access denied"
+		});
+	} 
+	next();
+};
