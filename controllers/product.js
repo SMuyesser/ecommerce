@@ -133,3 +133,35 @@ exports.remove = (req, res) => {
 		});
 	});
 };
+
+/*
+	Most popular and new products for sale
+	-- most popular = /products?sortBy=sold&order=desc&limit=5
+	-- most recent = /products?sortBy=createdAt&order=desc&limit=5
+	-- if no params are sent, then all products returned
+*/
+
+exports.list = (req, res) => {
+	// if we get order, sortby, or limit from route param 
+	// we use req.query value otherwise we default to ascending, sortby id, and limit 5
+	let order = req.query.order ? req.query.order : 'asc';
+	let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
+	let limit = req.query.limit ? parseInt(req.query.limit) : '5';
+
+	// get all products, deselect photo because large file size
+	// populate category field,
+	// sort and or limit and execute
+	Product.find()
+		.select("-photo")
+		.populate("category")
+		.sort([[sortBy, order]])
+		.limit(limit)
+		.exec((err, data) => {
+			if(err) {
+				return res.status(400).json({
+					error: "Products not found"
+				});
+			}
+			res.send(products);
+		});
+};
