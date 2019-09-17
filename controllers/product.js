@@ -5,6 +5,27 @@ const fs = require("fs");
 const Product = require("../models/product");
 const {errorHandler} = require('../helpers/dbErrorHandler');
 
+exports.productById= (req, res, next, id) => {
+	// find product by passed in id and get error or product
+	Product.findById(id).exec((err, product) =>{
+		// Error handler if no product found or error
+		if(err || !product) {
+			return res.status(400).json({
+				error: "Product not found"
+			})
+		}
+		// if product found, make it available in request object as product
+		req.product = product;
+		// middleware will run then continue with application
+		next();
+	});
+};
+
+exports.read = (req, res) => {
+	// inefficient to send photo here because of large size
+	req.product.photo = undefined;
+	return res.json(req.product);
+};
 
 exports.create = (req, res) => {
 	// create new form from incoming form data
