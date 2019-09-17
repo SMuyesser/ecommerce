@@ -21,6 +21,11 @@ exports.create = (req, res) => {
 		let product = new Product(fields);
 		// if were are sending an image file from front end
 		if(files.photo) {
+			if(files.photo.size > 1000000) {
+				return res.status(400).json({
+					error: "Image should be less than 1mb in size"
+			});
+			}
 			// photo data = file system, read files syncronously at the photo path
 			product.photo.data = fs.readFileSync(files.photo.path);
 			product.photo.contentType = files.photo.type;
