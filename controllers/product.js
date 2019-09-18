@@ -140,7 +140,6 @@ exports.remove = (req, res) => {
 	-- most recent = /products?sortBy=createdAt&order=desc&limit=5
 	-- if no params are sent, then all products returned
 */
-
 exports.list = (req, res) => {
 	// if we get order, sortby, or limit from route param 
 	// we use req.query value otherwise we default to ascending, sortby id, and limit 5
@@ -170,7 +169,6 @@ exports.list = (req, res) => {
 	it will find the products based on the req product category
 	and other products that has the same category will be returned
  */
-
 exports.listRelated = (req, res) => {
 	let limit = req.query.limit ? parseInt(req.query.limit) : '5';
 	// $ne mongodb for not included
@@ -185,5 +183,16 @@ exports.listRelated = (req, res) => {
 			});
 		}
 		res.json(products);
+	});
+};
+
+exports.listCategories = (req, res) => {
+	Product.distinct("category", {}, (err, categories) => {
+		if(err) {
+			return res.status(400).json({
+				error: "Categories not found"	
+			});
+		}
+		res.json(categories);
 	});
 };
